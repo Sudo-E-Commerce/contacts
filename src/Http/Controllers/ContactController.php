@@ -39,6 +39,7 @@ class ContactController extends AdminController
         $listdata->search('detail', 'Nội dung', 'string');
         $listdata->search('created_at', 'Ngày tạo', 'range');
         $listdata->search('status', 'Trạng thái', 'array', $status);
+        $listdata->searchBtn('Xuất Excel', route('admin.contacts.exports'), 'primary', 'fas fa-file-excel');
         // Build các button hành động
         $listdata->btnAction('status', 1, __('Chưa đọc'), 'info', 'fas fa-window-close');
         $listdata->btnAction('status', 2, __('Đã đọc'), 'success', 'fas fa-edit');
@@ -119,5 +120,81 @@ class ContactController extends AdminController
     public function destroy($id)
     {
         //
+    }
+
+    public function exports(Request $requests) {
+
+        // Đưa mảng về các biến có tên là các key của mảng
+        extract($requests->all(), EXTR_OVERWRITE);
+        // Lấy dữ liệu được bắt theo bộ lọc
+        $data_exports = $this->models::query();
+        
+        // Tiêu đề
+        if (isset($subject) && $subject != '') {
+            $data_exports = $data_exports->where('subject', 'LIKE', '%'.$subject.'%');
+        }
+        // Tên người gửi
+        if (isset($name) && $name != '') {
+            $data_exports = $data_exports->where('name', 'LIKE', '%'.$name.'%');
+        }
+        // Điên thoại
+        if (isset($phone) && $phone != '') {
+            $data_exports = $data_exports->where('phone', 'LIKE', '%'.$phone.'%');
+        }
+        // Email
+        if (isset($email) && $email != '') {
+            $data_exports = $data_exports->where('email', 'LIKE', '%'.$email.'%');
+        }
+        // Nội dung
+        if (isset($detail) && $detail != '') {
+            $data_exports = $data_exports->where('detail', 'LIKE', '%'.$detail.'%');
+        }
+        // lọc ngày
+        if($created_at_end != '' && $created_at_start != '') {
+            $data_exports = $data_exports->where('created_at','>',$created_at_start);
+            $data_exports = $data_exports->where('created_at','<',$created_at_end);
+        }
+        // lọc trạng thái
+        if (isset($status) && $status != '') {
+            $data_query = $data_query->where('status',$status);
+        }
+
+        $data_exports = $data_exports->where('status', '<>', -1)->get();
+
+        // Mảng export
+        $data = [
+            'file_name' => 'contacts-'.time(),
+            'fields' => [
+                __('Tiêu đề'),
+                __('Tên người gửi'),
+                __('Điện thoại'),
+                __('Email'),
+                __('Nội dung'),
+                __('Thời gian'),
+                __('Trạng thái'),
+            ],
+            'data' => [
+                // 
+            ]
+        ];
+        // Foreach lấy mảng data
+        $status = [
+            1 => 'Chưa đọc',
+            2 => 'Đã đọc',
+        ];
+        foreach ($data_exports as $key => $value) {
+            $data['data'][] = [
+                $value->subject,
+                $value->name,
+                $value->phone,
+                $value->email,
+                $value->detaul,
+                $value->getTime(),
+                $status[$value->status] ?? '',
+            ];
+        }
+        // $export = new \Sudo\Base\Export\GeneralExports($data);
+        // return $export;
+        return \Excel::download(new \Sudo\Base\Export\GeneralExports($data), $data['file_name'].'.xlsx');
     }
 }

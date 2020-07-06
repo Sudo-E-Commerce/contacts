@@ -5,5 +5,6 @@ App::booted(function() {
 	Route::namespace($namespace)->name('admin.')->prefix(config('app.admin_dir'))->middleware(['web', 'auth-admin'])->group(function() {
 		// Tài khoản người dùng quản trị
 		Route::resource('contacts', 'ContactController');
+		Route::post('contacts/exports', 'ContactController@exports')->name('contacts.exports');
 	});
 });
