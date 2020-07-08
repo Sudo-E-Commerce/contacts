@@ -193,8 +193,6 @@ class ContactController extends AdminController
                 $status[$value->status] ?? '',
             ];
         }
-        // $export = new \Sudo\Base\Export\GeneralExports($data);
-        // return $export;
         return \Excel::download(new \Sudo\Base\Export\GeneralExports($data), $data['file_name'].'.xlsx');
     }
 }
