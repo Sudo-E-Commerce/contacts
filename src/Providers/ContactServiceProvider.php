@@ -106,10 +106,10 @@ class ContactServiceProvider extends ServiceProvider
             ];
             $all = array_merge($assets, $config, $view);
             // Chạy riêng
-            $this->publishes($all, 'sudo/product');
-            $this->publishes($assets, 'sudo/product/assets');
-            $this->publishes($config, 'sudo/product/config');
-            $this->publishes($view, 'sudo/product/view');
+            $this->publishes($all, 'sudo/contact');
+            $this->publishes($assets, 'sudo/contact/assets');
+            $this->publishes($config, 'sudo/contact/config');
+            $this->publishes($view, 'sudo/contact/view');
             // Khởi chạy chung theo core
             $this->publishes($all, 'sudo/core');
             $this->publishes($assets, 'sudo/core/assets');
