@@ -188,7 +188,7 @@ class ContactController extends AdminController
                 $value->name,
                 $value->phone,
                 $value->email,
-                $value->detaul,
+                $value->detail,
                 $value->getTime(),
                 $status[$value->status] ?? '',
             ];
