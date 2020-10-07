@@ -43,7 +43,7 @@ class ContactController extends AdminController
         // Build các button hành động
         $listdata->btnAction('status', 1, __('Chưa đọc'), 'info', 'fas fa-window-close');
         $listdata->btnAction('status', 2, __('Đã đọc'), 'success', 'fas fa-edit');
-        $listdata->btnAction('delete', -1, __('Table::table.trash'), 'danger', 'fas fa-trash');
+        $listdata->btnAction('delete', -1, __('Translate::table.trash'), 'danger', 'fas fa-trash');
         // Build bảng
         $listdata->add('subject', 'Tiêu đề', 1);
         $listdata->add('name', 'Tên người gửi', 1);
